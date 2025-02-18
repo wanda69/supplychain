@@ -14,8 +14,26 @@ void * safe_realloc(void * ptr, size_t nmem, size_t size) { // changes the size 
 
 typedef struct Node {
     int data;
+    struct Distributor *distribution;
     struct Node * next; // The key is that each node stores the address (the pointer) of the next node, creating the chain.
 } Node;
+
+typedef struct Distributor {
+    char * name;
+    int size;
+    struct Node * input;
+    struct Node * output;
+    struct ACTOR ** actors;
+
+    struct Node * location;
+    // location of a capitalist distributor is a byproduct of its holdings.
+    char holdings[];
+
+} Distributor;
+
+typedef struct ACTOR {
+    char * name;
+} ACTOR;
 
 /*
     Every node is a simultaneous instance of data.
@@ -101,7 +119,7 @@ size_t curl_callback(char *ptr, size_t size, size_t nmemb, void *userdata) {
     mem->response = resp;
     memcpy(&(mem->response[mem->size]), ptr, multipliedSize);
     mem->size += multipliedSize;
-    mem->response[mem->size] = 0;
+    mem->response[mem->size] = 0; // 0 for null-terminator
 
     return multipliedSize;
 }
@@ -143,7 +161,7 @@ int main(void) {
 
             curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, curl_callback);
             curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void*)&chunk);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)fp;
+            //curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)fp;
 
 
             res = curl_easy_perform(curl);
@@ -182,6 +200,17 @@ int main(void) {
 
     Print(head);
     printf("\n");
+
+    // initialize the distribution node. ie (Reflex chain)
+    Distributor * distribution = (Node *)malloc(sizeof(Distributor));
+    // need an ACTOR - can be sourced from anywhere....
+
+    ACTOR * actor = (ACTOR *)head->next->next;
+    printf("head next next %d\n", head->next->next->data);
+
+
+
+
 
 
     return 0;
